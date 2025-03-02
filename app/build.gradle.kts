@@ -13,7 +13,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,8 +40,15 @@ android {
 }
 
 dependencies {
-
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.material.icons.extended)
+    implementation("dev.chrisbanes.haze:haze:1.2.2")
+    implementation("dev.chrisbanes.haze:haze-materials:1.2.2")
+    implementation(libs.androidx.activity.ktx)
+    implementation(files("libs/quickjs-android-0.2.1.aar"))
+    //implementation("com.caoccao.javet:javet:4.1.1") // Core (Must-have)
+    implementation(libs.javet.v8.android)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -51,6 +58,12 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.lint)
+    implementation(libs.androidx.animation.android)
+    implementation(libs.androidx.documentfile)
+    implementation(libs.androidx.storage)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

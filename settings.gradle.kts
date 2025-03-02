@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Chouten"
 include(":app")
+include(":Relay")

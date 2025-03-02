@@ -1,62 +1,135 @@
 package com.inumaki.chouten.ui.theme
 
-import android.app.Activity
-import android.os.Build
+import android.content.res.Configuration
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.platform.LocalConfiguration
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+// Define color scheme
+data class ChoutenColors(
+    val background: Color,
+    val container: Color,
+    val overlay: Color,
+    val border: Color,
+    val fg: Color,
+    val accent: Color
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+val LightChoutenColors = ChoutenColors(
+    background = Color(0xFFF5F5F5),
+    container = Color(0xFFFFFFFF),
+    overlay = Color(0xFF212121),
+    border = Color(0xFFE0E0E0),
+    fg = Color(0xFF757575),
+    accent = Color(0xFFFF4081)
+)
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+val DarkChoutenColors = ChoutenColors(
+    background = Color(0xFF0C0C0C),
+    container = Color(0xFF171717),
+    overlay = Color(0xFF272727),
+    border = Color(0xFF3B3B3B),
+    fg = Color(0xFFD4D4D4),
+    accent = Color(0xFF5E5CE6)
+)
+
+// Define typography
+data class ChoutenTypography(
+    val title: TextStyle,
+    val body: TextStyle,
+    val caption: TextStyle
+)
+
+val DefaultTypography = ChoutenTypography(
+    title = TextStyle(
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = FontFamily.Default
+    ),
+    body = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Normal,
+        fontFamily = FontFamily.Default
+    ),
+    caption = TextStyle(
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Light,
+        fontFamily = FontFamily.Default
+    )
+)
+
+// Define shapes
+data class ChoutenShapes(
+    val small: RoundedCornerShape,
+    val medium: RoundedCornerShape,
+    val large: RoundedCornerShape
+)
+
+val DefaultShapes = ChoutenShapes(
+    small = RoundedCornerShape(4.dp),
+    medium = RoundedCornerShape(8.dp),
+    large = RoundedCornerShape(16.dp)
 )
 
 @Composable
+fun isTablet(): Boolean {
+    val configuration = LocalConfiguration.current
+    return if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        configuration.screenWidthDp > 1000
+    } else {
+        configuration.screenWidthDp > 750
+    }
+}
+
+data class DeviceInfo(val isTablet: Boolean)
+
+val LocalDeviceInfo = staticCompositionLocalOf<DeviceInfo> {
+    error("No device information found")
+}
+
+// Define CompositionLocals
+val LocalChoutenColors = staticCompositionLocalOf { LightChoutenColors }
+val LocalChoutenTypography = staticCompositionLocalOf { DefaultTypography }
+val LocalChoutenShapes = staticCompositionLocalOf { DefaultShapes }
+
+// ChoutenTheme provider function
+@Composable
 fun ChoutenTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    colors: ChoutenColors = if (isSystemInDarkTheme()) DarkChoutenColors else LightChoutenColors,
+    typography: ChoutenTypography = DefaultTypography,
+    shapes: ChoutenShapes = DefaultShapes,
     content: @Composable () -> Unit
 ) {
+    val isTablet = isTablet()
 
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+    CompositionLocalProvider(
+        LocalChoutenColors provides colors,
+        LocalChoutenTypography provides typography,
+        LocalChoutenShapes provides shapes,
+        LocalDeviceInfo provides DeviceInfo(isTablet),
         content = content
     )
 }
+
+// Theme object for easy access
+object ChoutenTheme {
+    val colors: ChoutenColors
+        @Composable get() = LocalChoutenColors.current
+
+    val typography: ChoutenTypography
+        @Composable get() = LocalChoutenTypography.current
+
+    val shapes: ChoutenShapes
+        @Composable get() = LocalChoutenShapes.current
+}
+
 
