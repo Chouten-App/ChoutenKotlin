@@ -49,6 +49,7 @@ dependencies {
     implementation(files("libs/quickjs-android-0.2.1.aar"))
     //implementation("com.caoccao.javet:javet:4.1.1") // Core (Must-have)
     implementation(libs.javet.v8.android)
+    implementation(libs.seeker)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

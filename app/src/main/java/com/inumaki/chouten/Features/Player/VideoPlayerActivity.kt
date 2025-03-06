@@ -1,5 +1,6 @@
 package com.inumaki.chouten.Features.Player
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,8 @@ class VideoPlayerActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val url = intent.getStringExtra("url") ?: return finish()
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         setContent {
             ChoutenTheme {

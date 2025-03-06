@@ -63,6 +63,7 @@ import com.inumaki.chouten.Models.DiscoverData
 import com.inumaki.chouten.Models.DiscoverSection
 import com.inumaki.chouten.Relay.Relay
 import com.inumaki.chouten.ui.theme.ChoutenTheme
+import com.inumaki.chouten.ui.theme.LocalDeviceInfo
 import java.net.URLEncoder
 
 @Composable
@@ -172,11 +173,13 @@ fun LoadingCarouselCard() {
 
 @Composable
 fun List(title: String, list: List<DiscoverData>, navController: NavController) {
+    val startOffset = if (LocalDeviceInfo.current.isTablet) 130.dp else 20.dp
+
     Column(
         modifier = Modifier.padding(top = 12.dp)
     ) {
         Text(
-            modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+            modifier = Modifier.padding(start = startOffset, end = 20.dp),
             text = title,
             color = Color(0xFFD4D4D4),
             fontSize = 20.sp,
@@ -184,7 +187,7 @@ fun List(title: String, list: List<DiscoverData>, navController: NavController) 
         )
 
         LazyRow(
-            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
+            contentPadding = PaddingValues(start = startOffset, top = 12.dp, bottom = 12.dp, end = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(items = list) { item ->
@@ -277,6 +280,8 @@ fun Carousel(data: DiscoverSection, showBanner: Boolean, navController: NavContr
     val snapFlingBehavior = rememberSnapFlingBehavior(lazyListState = state)
     val index by remember { derivedStateOf { state.firstVisibleItemIndex } }
 
+    val startOffset = if (LocalDeviceInfo.current.isTablet) 130.dp else 40.dp
+
     // "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWJzdHJhY3R8ZW58MHx8MHx8fDA%3D"
     Box {
         if (showBanner) {
@@ -306,10 +311,9 @@ fun Carousel(data: DiscoverSection, showBanner: Boolean, navController: NavContr
                 },
             verticalAlignment = Alignment.CenterVertically,
             state = state,
-            contentPadding = PaddingValues(top = 120.dp, start = 40.dp, end = 40.dp),
+            contentPadding = PaddingValues(top = 120.dp, start = startOffset, end = 40.dp),
             flingBehavior = snapFlingBehavior,
             horizontalArrangement = Arrangement.spacedBy(20.dp)
-
         ) {
             items(data.list) {
                 CarouselCard(data = it, navController = navController)
@@ -326,7 +330,7 @@ fun CarouselCard(data: DiscoverData, navController: NavController) {
 
     Box(
         modifier = Modifier
-            .widthIn(min = dpWidth.dp - 80.0.dp, max = 600.dp - 80.0.dp)
+            .widthIn(min = dpWidth.dp - 80.0.dp, max = minOf(600.dp - 80.0.dp, dpWidth.dp - 80.dp))
             .height(440.dp)
             .clip(RoundedCornerShape(20.dp))
             .border(0.5.dp, Color(0xFF3B3B3B), shape = RoundedCornerShape(20.dp))

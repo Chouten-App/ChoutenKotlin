@@ -256,23 +256,21 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = ChoutenTheme.colors.background
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color(0xFF000000))
-                    ) {  }
+                    if (!LocalDeviceInfo.current.isTablet) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color(0xFF000000))
+                        )
+                    }
 
                     NavHost(mainNavController, "homeScreens") {
                         composable("homeScreens") {
-                            Row(
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(ChoutenTheme.colors.background)
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.TopStart
                             ) {
-                                if (LocalDeviceInfo.current.isTablet) {
-                                    TabView(tabBarItems, navController)
-                                }
-
                                 Scaffold(
                                     modifier = Modifier
                                         .scale(animatedScale)
@@ -353,6 +351,10 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
 
+                                }
+
+                                if (LocalDeviceInfo.current.isTablet) {
+                                    TabView(tabBarItems, navController)
                                 }
                             }
                         }
@@ -616,6 +618,8 @@ fun AppTopBar(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val screenName = backStackEntry?.destination?.route
 
+    val startOffset = if (LocalDeviceInfo.current.isTablet) 130.dp else 20.dp
+
     val hazeAlpha by remember {
         derivedStateOf {
             val scrollOffset = listState.firstVisibleItemScrollOffset
@@ -637,7 +641,7 @@ fun AppTopBar(
                     endIntensity = 0f
                 )
             }
-            .padding(start = 20.dp, end = 20.dp, top = 60.dp, bottom = 50.dp),
+            .padding(start = startOffset, end = 20.dp, top = 60.dp, bottom = 50.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
@@ -792,6 +796,13 @@ fun TabView(tabBarItems: List<TabBarItem>, navController: NavController) {
                 modifier = Modifier.topBorder(
                     color = Color(59, 59, 59, 255),
                     height = 1f
+                ).background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            ChoutenTheme.colors.background,
+                            Color.Transparent
+                        )
+                    )
                 )
             ) {
                 // looping over each tab to generate the views and navigation for each item

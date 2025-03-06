@@ -23,6 +23,7 @@ quickjs = "1.0.0"
 quickjsKt = "1.0.0"
 animationAndroid = "1.7.5"
 documentfile = "1.0.1"
+seeker = "1.2.2"
 storage = "1.4.2"
 media3Exoplayer = "1.5.1"
 appcompat = "1.6.1"
@@ -58,6 +59,7 @@ ktor-client-core = { module = "io.ktor:ktor-client-core" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
 quickjs = { module = "com.github.dokar3.quickjs-kt:quickjs", version.ref = "quickjs" }
 quickjs-kt = { module = "io.github.dokar3:quickjs-kt", version.ref = "quickjsKt" }
+seeker = { module = "io.github.2307vivek:seeker", version.ref = "seeker" }
 skydoves-cloudy = { module = "com.github.skydoves:cloudy", version.ref = "cloudyVersion" }
 androidx-animation-android = { group = "androidx.compose.animation", name = "animation-android", version.ref = "animationAndroid" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
